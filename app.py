@@ -12,7 +12,7 @@ import numpy as np
 # Utils
 import os
 import io
-import webbrowser
+# import webbrowser
 import joblib
 import time
 import warnings
@@ -20,8 +20,8 @@ warnings.filterwarnings('ignore')
 
 from PIL import Image
 
-home_img = Image.open("D:/Softwares/DS/Project/Hepatitis/Images/1.jpg")
-home_img2 = Image.open("D:/Softwares/DS/Project/Hepatitis/Images/2.jpg")
+home_img = Image.open("assets/1.jpg")
+home_img2 = Image.open("assets/2.jpg")
 
 
 # Data viz
@@ -66,7 +66,7 @@ def load_model(model_file):
     return loaded_model
         
 
-img = Image.open("D:/Softwares/DS/Project/Hepatitis/Images/icon.jpg") 
+img = Image.open("assets/icon.jpg") 
 
 st.set_page_config(page_title="Disease Prediction Web App", 
                    page_icon= img,
@@ -75,8 +75,8 @@ st.set_page_config(page_title="Disease Prediction Web App",
 
 def main():
     
-    df = pd.read_csv("D:/Softwares/DS/Project/Hepatitis/data.csv")
-    df1 = pd.read_csv("D:/Softwares/DS/Project/Hepatitis/Original data/balanced_data.csv")
+    df = pd.read_csv("Datasets/data.csv")
+    df1 = pd.read_csv("Datasets/balanced_data.csv")
     df1.drop('Unnamed: 0', axis=1, inplace=True)
     menu = ['Home', 'Quick Explore', 'Plot', 'Prediction']
     
@@ -215,7 +215,7 @@ def main():
             
     elif option == 'Prediction':
         with st.spinner('Wait for it...'):
-            time.sleep(5)
+            time.sleep(3)
         
         st.subheader('Predictive Analytics')
         
@@ -247,7 +247,7 @@ def main():
         model_choice = st.selectbox('Select Model',['Random Forest'])
         if st.button('Predict'):
             if model_choice == 'Random Forest':
-                loaded_model = load_model("D:\Softwares\DS\Project\Hepatitis\Models\Random_Forest_Model.pkl")
+                loaded_model = load_model("Random_Forest_Model.pkl")
                 prediction =loaded_model.predict(single_sample)
                 pred_prob = loaded_model.predict_proba(single_sample)
            
@@ -268,9 +268,9 @@ def main():
         if st.checkbox('Interpret'):
             st.subheader('Interpretation of Model')
             if model_choice == 'Random Forest':
-                loaded_model = load_model("D:/Softwares/DS/Project/Hepatitis/Models/Random_Forest_Model.pkl")
+                loaded_model = load_model("Random_Forest_Model.pkl")
                 
-            df1 = pd.read_csv("D:/Softwares/DS/Project/Hepatitis/Original data/balanced_data.csv")
+            df1 = pd.read_csv("Datasets/balanced_data.csv")
             x = df1[['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']]
             feature_names = ['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']
             class_names = ['Die(1)', 'Live(2)']
