@@ -224,7 +224,7 @@ def main():
                 progress.progress(i+1)
         
         st.subheader("Data Visualization")
-        df1 = pd.read_csv("D:/Softwares/DS/Project/Hepatitis/Original data/balanced_data.csv")
+        df1 = pd.read_csv("Datasets/balanced_data.csv")
         df1_numeric = df1[['age','bilirubin','alk_phosphate','sgot','albumin','protime']]
         df1_categorical = df1[['sex','steroid','antivirals','fatigue','spiders','ascites','varices','histology','class']]
                             
@@ -253,7 +253,7 @@ def main():
             
     elif option == 'Prediction':
         with st.spinner('Wait for it...'):
-            time.sleep(3)
+            time.sleep(0.2)
         
         st.subheader('Predictive Analytics')
         
