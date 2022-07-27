@@ -81,6 +81,36 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
+footer="""<style>
+a:link , a:visited{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+
+a:hover,  a:active {
+color: skyblue;
+background-color: transparent;
+text-decoration: underline;
+}
+
+.footer {
+position: fixed;
+left: 0;
+bottom: 0;
+width: 100%;
+background-color: white;
+color: black;
+text-align: right;
+}
+</style>
+<div class="footer">
+<p>>Developed by <a style='display: block; text-align: right;' href="https://github.com/Siddhantt-K" target="_blank">Siddhant K</a></p>
+</div>
+"""
+st.markdown(footer,unsafe_allow_html=True)
+
+
 def main():
     
     df = pd.read_csv("Datasets/data.csv")
@@ -103,7 +133,7 @@ def main():
                                                  '--hover-color': '#eee'
                                                  },
                                      'nav-link-selected':{'background-color':'peach'},
-                                     },                            
+                                     }                            
                             )        
 
     if option == 'Home':    
