@@ -72,6 +72,14 @@ st.set_page_config(page_title="Disease Prediction Web App",
                    page_icon= img,
                    layout='centered')
 
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 def main():
     
@@ -92,7 +100,7 @@ def main():
                                                  'font-size':'20px',
                                                  'text-align':'left',
                                                  'margin':'0px',
-                                                 '--hover-color': '#eee',
+                                                 '--hover-color': '#eee'
                                                  },
                                      'nav-link-selected':{'background-color':'peach'},
                                      },                            
@@ -244,12 +252,12 @@ def main():
         st.json(pretty_result)
         
         # ML models
-        model_choice = st.selectbox('Select Model',['Random Forest'])
+#        model_choice = st.selectbox('Select Model',['Random Forest', 'Logistic Regression', 'KNN'])
         if st.button('Predict'):
-            if model_choice == 'Random Forest':
-                loaded_model = load_model("Random_Forest_Model.pkl")
-                prediction =loaded_model.predict(single_sample)
-                pred_prob = loaded_model.predict_proba(single_sample)
+#            if model_choice == 'Random Forest':
+            loaded_model = load_model("Random_Forest_Model.pkl")
+            prediction =loaded_model.predict(single_sample)
+            pred_prob = loaded_model.predict_proba(single_sample)
            
             if prediction == 1:
                 st.warning('Patient Dies')
@@ -263,12 +271,12 @@ def main():
             pred_probability_score = {'Die':pred_prob[0][0]*100, 'Live':pred_prob[0][1]*100}
             st.subheader('Prediction Probability Score:')
             st.json(pred_probability_score)
-   
-                
+
+            
         if st.checkbox('Interpret'):
             st.subheader('Interpretation of Model')
-            if model_choice == 'Random Forest':
-                loaded_model = load_model("Random_Forest_Model.pkl")
+    #        if model_choice == 'Random Forest':
+            loaded_model = load_model("Random_Forest_Model.pkl")
                 
             df1 = pd.read_csv("Datasets/balanced_data.csv")
             x = df1[['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']]
