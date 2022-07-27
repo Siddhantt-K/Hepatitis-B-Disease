@@ -1,0 +1,15 @@
+eli5==0.11.0
+imblearn==0.0
+ipython==8.2.0
+joblib==1.0.0
+lime==0.2.0.1
+matplotlib==3.5.1
+numpy==1.21.5
+pandas==1.2.0
+Pillow==9.1.0
+plotly==4.9.0
+pydotplus==2.0.2
+scikit_learn==1.0.2
+seaborn==0.11.2
+streamlit==1.1.0
+streamlit_option_menu==0.3.2
