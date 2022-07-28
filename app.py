@@ -237,7 +237,7 @@ def main():
             st.pyplot()
         
         if st.checkbox('Histogram'):
-            st.subheader('Histogram | Distplot')
+            st.subheader('Histogram')
             st.info("If error, please adjust column name on below panel.")
             column_dist_plot = st.selectbox("Select a feature",df1_numeric.columns)
             fig = px.histogram(df1[column_dist_plot])
@@ -253,24 +253,26 @@ def main():
             
     elif option == 'Prediction':
         with st.spinner('Wait for it...'):
-            time.sleep(0.2)
+            time.sleep(1) 
         
         st.subheader('Predictive Analytics')
         
-        age = st.number_input('Age', 7, 80) # Since in our data the lower and upper limit for age is 7 and 80 resp.
-        sex = st.selectbox('Sex', tuple(gender_dict.keys()))
-        steroid = st.radio('Do you take Steroids?', tuple(feature_dict.keys()))
-        antivirals = st.radio('Do you take Antivirals?', tuple(feature_dict.keys()))
-        fatigue = st.radio('Do you have Fatigue?', tuple(feature_dict.keys()))
-        spiders = st.radio('Presence of Spider Naive?', tuple(feature_dict.keys()))
-        ascites = st.radio('Ascites', tuple(feature_dict.keys()))
-        varices = st.radio('Presence of Varices', tuple(feature_dict.keys())) 
-        bilirubin = st.number_input('Bilirubin Content',0.0,8.0)
-        alk_phosphate = st.number_input('Alkaline Phosphate Content',0.0,296.0)
-        sgot = st.number_input('Sgot',0.0,648.0)
-        albumin = st.number_input('Albumin',0.0,6.4)
-        protime = st.number_input('Prothrombine Time',0.0,100.0)
-        histology = st.radio('Histology', tuple(feature_dict.keys()))
+#        with st.form(key='my_form', clear_on_submit=False):
+        form1 = st.form(key='form1')
+        age = form1.number_input('Age', 7, 80) # Since in our data the lower and upper limit for age is 7 and 80 resp.
+        sex = form1.selectbox('Sex', tuple(gender_dict.keys()))
+        steroid = form1.radio('Do you take Steroids?', tuple(feature_dict.keys()))
+        antivirals = form1.radio('Do you take Antivirals?', tuple(feature_dict.keys()))
+        fatigue = form1.radio('Do you have Fatigue?', tuple(feature_dict.keys()))
+        spiders = form1.radio('Presence of Spider Naive?', tuple(feature_dict.keys()))
+        ascites = form1.radio('Ascites', tuple(feature_dict.keys()))
+        varices = form1.radio('Presence of Varices', tuple(feature_dict.keys())) 
+        bilirubin = form1.number_input('Bilirubin Content',0.0,8.0)
+        alk_phosphate = form1.number_input('Alkaline Phosphate Content',0.0,296.0)
+        sgot = form1.number_input('Sgot',0.0,648.0)
+        albumin = form1.number_input('Albumin',0.0,6.4)
+        protime = form1.number_input('Prothrombine Time',0.0,100.0)
+        histology = form1.radio('Histology', tuple(feature_dict.keys()))
         
         # Each above entries will get stored in the list which will be send to our ML model
         feature_list = [age,get_value(sex,gender_dict),get_feature_value(steroid),get_feature_value(antivirals),get_feature_value(fatigue),get_feature_value(spiders),get_feature_value(ascites),get_feature_value(varices),bilirubin,alk_phosphate,sgot,albumin,int(protime),get_feature_value(histology)]
@@ -278,12 +280,13 @@ def main():
         single_sample = np.array(feature_list).reshape(1,-1) #reshaping so that our model doest not throw any error
         
         # This values will be seen by a person like ok I have selected this values
-        pretty_result = {'age':age, 'sex':sex, 'steroid':steroid, 'antivirals':antivirals, 'spiders':spiders, 'ascites':ascites, 'varices':varices, 'bilirubin':bilirubin, 'alk_phosphate':alk_phosphate, 'sgot':sgot, 'albumin':albumin, 'protime':protime, 'histology':histology}
+        pretty_result = {'age':age, 'sex':sex, 'steroid':steroid, 'antivirals':antivirals, 'fatigue':fatigue, 'spiders':spiders, 'ascites':ascites, 'varices':varices, 'bilirubin':bilirubin, 'alk_phosphate':alk_phosphate, 'sgot':sgot, 'albumin':albumin, 'protime':protime, 'histology':histology}
         st.json(pretty_result)
         
-        # ML models
-#        model_choice = st.selectbox('Select Model',['Random Forest', 'Logistic Regression', 'KNN'])
-        if st.button('Predict'):
+        submit_button = form1.form_submit_button('Predict')
+
+        if submit_button:
+
 #            if model_choice == 'Random Forest':
             loaded_model = load_model("Random_Forest_Model.pkl")
             prediction =loaded_model.predict(single_sample)
@@ -297,27 +300,28 @@ def main():
                 
             else:
                 st.success('Patient Lives')
-                
+        
             pred_probability_score = {'Die':pred_prob[0][0]*100, 'Live':pred_prob[0][1]*100}
             st.subheader('Prediction Probability Score:')
             st.json(pred_probability_score)
 
-            
-        if st.checkbox('Interpret'):
-            st.subheader('Interpretation of Model')
-    #        if model_choice == 'Random Forest':
-            loaded_model = load_model("Random_Forest_Model.pkl")
                 
+        if st.checkbox('Interpret'):
+
+            st.subheader('Interpretation of Model')
+            loaded_model = load_model("Random_Forest_Model.pkl")
+                 
             df1 = pd.read_csv("Datasets/balanced_data.csv")
             x = df1[['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']]
             feature_names = ['age', 'sex', 'steroid', 'antivirals','fatigue','spiders', 'ascites','varices', 'bilirubin', 'alk_phosphate', 'sgot', 'albumin', 'protime','histology']
-            class_names = ['Die(1)', 'Live(2)']
+            class_names = ['Die(1)','Live(2)']
             explainer = lime.lime_tabular.LimeTabularExplainer(x.values, feature_names=feature_names, class_names=class_names, discretize_continuous=True)
                 
             # The lime explainer
             exp = explainer.explain_instance(np.array(feature_list), loaded_model.predict_proba, num_features=14)
             exp.show_in_notebook(show_table=True)
             fig = exp.as_pyplot_figure()
+            plt.title('Explainer')
             st.pyplot()
 
 
